@@ -1,26 +1,33 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import "./App.css";
+import Weather from "./components/Weather";
+import { coord, weather } from "./model";
 
-function App() {
+const App: React.FC = () => {
+  const [position, setPosition] = useState<coord>({} as coord);
+  const [weather, setWeather] = useState<weather>({} as weather);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition((pos) => {
+      setPosition({
+        x: pos.coords.longitude,
+        y: pos.coords.latitude,
+      });
+    });
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="header">
+        <h1>Local Weather</h1>
+        <Weather
+          position={position}
+          weather={weather}
+          setWeather={setWeather}
+        />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
